@@ -1,0 +1,72 @@
+version: '3'
+
+services:
+  mysql_cake:
+    image: mysql:5.7
+    ports:
+      - '3317:3306'
+    volumes:
+      - "cake_mysql_volume:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  php_cake:
+    build:
+      context: php8-fpm
+      args:
+        USER_UID: ${USER_UID}
+    volumes:
+      - "${ROOT_DIRECTORY}:/var/www/cake"
+      - "cake_var_volume:/var/www/cake/var"
+      - "~/.composer:/root/.composer"
+    environment:
+      XDEBUG_CONFIG: "remote_host=${YOUR_IP_ADDRESS}, client_host=${YOUR_IP_ADDRESS}"
+      PHP_IDE_CONFIG: "serverName=${YOUR_HOST}"
+  #        extra_hosts:
+  #            - "bl-it-ldap-test.int:${LDAP_SERVER_TEST}"
+  #            - "bl-ldap-master.int:${LDAP_SERVER_PROD}"
+  #        external_links:
+  #            - nginx_users
+  nginx_cake:
+    build: nginx
+    ports:
+      - 8089:80
+    volumes_from:
+      - php_cake
+#        external_links:
+#            - nginx_tele2
+#    redis_cake:
+#        image: redis:alpine
+#    rabbitmq_cake:
+#        image: rabbitmq:3-management
+#        ports:
+#            - "8080:15672"
+#            - "5672:5672"
+#            - "5671:5671"
+#        environment:
+#            RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD}
+#            RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
+#            RABBITMQ_DEFAULT_VHOST: ${RABBIT_VHOST}
+
+#    server:
+#        image: yandex/clickhouse-server
+#        ports:
+#            - "8123:8123"
+#            - "9001:9001"
+#            - "9009:9009"
+#
+#        ulimits:
+#            nproc: 65535
+#            nofile:
+#                soft: 262144
+#                hard: 262144
+#    client:
+#        image: yandex/clickhouse-client
+#        command: ['--host', 'server']
+volumes:
+  cake_mysql_volume:
+    external: true
+  cake_var_volume:
+    external: true

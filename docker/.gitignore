@@ -1,0 +1,5 @@
+/logs
+/.data
+/data
+.env
+.docker-sync
