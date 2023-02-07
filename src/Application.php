@@ -15,12 +15,25 @@
 
 namespace App;
 
+use App\Model\Entity\Bug;
+use App\Policy\BugPolicy;
+use Authentication\AuthenticationService;
+use Authentication\AuthenticationServiceProviderInterface;
+use Authentication\Middleware\AuthenticationMiddleware;
+use Authorization\AuthorizationService;
+use Authorization\AuthorizationServiceProviderInterface;
+use Authorization\Exception\MissingIdentityException;
+use Authorization\Middleware\AuthorizationMiddleware;
+use Authorization\Policy\MapResolver;
+use Authorization\Policy\OrmResolver;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Application setup class.
@@ -28,7 +41,7 @@ use Cake\Routing\Middleware\RoutingMiddleware;
  * This defines the bootstrapping logic and middleware layers you
  * want to use in your application.
  */
-class Application extends BaseApplication
+class Application extends BaseApplication implements AuthorizationServiceProviderInterface, AuthenticationServiceProviderInterface
 {
     /**
      * {@inheritDoc}
@@ -51,6 +64,9 @@ class Application extends BaseApplication
         }
 
         // Load more plugins here
+
+        $this->addPlugin('Authorization');
+        $this->addPlugin('Authentication');
     }
 
     /**
@@ -78,8 +94,30 @@ class Application extends BaseApplication
             // creating the middleware instance specify the cache config name by
             // using it's second constructor argument:
             // `new RoutingMiddleware($this, '_cake_routes_')`
-            ->add(new RoutingMiddleware($this));
-
+            ->add(new RoutingMiddleware($this))
+            ->add(new AuthenticationMiddleware($this))
+            ->add(new AuthorizationMiddleware($this, [
+                'skipAuthorization'   => [
+                    'login',
+                ],
+                'unauthorizedHandler' => [
+                    'className'  => 'Authorization.Redirect',
+                    'url'        => '/users/login',
+                    'queryParam' => 'redirectUrl',
+                    'exceptions' => [
+                        MissingIdentityException::class,
+                    ],
+                ],
+            ]));
+        if (Configure::read('debug')) {
+            // Disable authz for debugkit
+            $middlewareQueue->add(function ($req, $res, $next) {
+                if ($req->getParam('plugin') === 'DebugKit') {
+                    $req->getAttribute('authorization')->skipAuthorization();
+                }
+                return $next($req, $res);
+            });
+        }
         return $middlewareQueue;
     }
 
@@ -95,7 +133,40 @@ class Application extends BaseApplication
         }
 
         $this->addPlugin('Migrations');
+    }
 
-        // Load more plugins here
+    public function getAuthorizationService(ServerRequestInterface $request, ResponseInterface $response)
+    {
+        //        $resolver = new OrmResolver();
+        $resolver = new MapResolver();
+        $resolver->map(Bug::class, BugPolicy::class);
+
+        return new AuthorizationService($resolver);
+    }
+
+    public function getAuthenticationService(ServerRequestInterface $request, ResponseInterface $response)
+    {
+        $service = new AuthenticationService();
+        $service->setConfig([
+            'unauthenticatedRedirect' => '/users/login',
+            'queryParam'              => 'redirect',
+        ]);
+
+        $fields = [
+            'username' => 'email',
+            'password' => 'password',
+        ];
+
+        // Load identifiers
+        $service->loadIdentifier('Authentication.Password', compact('fields'));
+
+        // Load the authenticators, you want session first
+        $service->loadAuthenticator('Authentication.Session');
+        $service->loadAuthenticator('Authentication.Form', [
+            'fields'   => $fields,
+            'loginUrl' => '/users/login',
+        ]);
+
+        return $service;
     }
 }

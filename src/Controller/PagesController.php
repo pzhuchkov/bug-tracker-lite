@@ -42,9 +42,10 @@ class PagesController extends AppController
      */
     public function display(...$path)
     {
-        if (!$path) {
-            return $this->redirect('/');
-        }
+        $this->Authorization->skipAuthorization();
+        //        if (!$path) {
+        return $this->redirect('/bugs');
+        //        }
         if (in_array('..', $path, true) || in_array('.', $path, true)) {
             throw new ForbiddenException();
         }

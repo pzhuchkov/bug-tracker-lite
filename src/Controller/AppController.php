@@ -17,6 +17,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\Event\EventInterface;
 
 /**
  * Application Controller
@@ -52,5 +53,55 @@ class AppController extends Controller
          * see https://book.cakephp.org/3/en/controllers/components/security.html
          */
         //$this->loadComponent('Security');
+
+        //        $this->loadComponent('Auth', [
+        ////            'authorize'=> 'Controller',
+        //            'authenticate' => [
+        //                'Form' => [
+        //                    'fields' => [
+        //                        'username' => 'email',
+        //                        'password' => 'password'
+        //                    ]
+        //                ]
+        //            ],
+        //            'loginAction' => [
+        //                'controller' => 'Users',
+        //                'action' => 'login'
+        //            ],
+        //            // If unauthorized, return them to page they were just on
+        //            'unauthorizedRedirect' => $this->referer()
+        //        ]);
+
+        $this->loadComponent('Authentication.Authentication', [
+
+        ]);
+
+        $this->loadComponent('Authorization.Authorization', [
+            //            'identityCheckEvent' => 'Controller.initialize',
+        ]);
+
+        // Allow the display action so our PagesController
+        // continues to work. Also enable the read only actions.
+        //        $this->Auth->allow(['display', 'view', 'index']);
     }
+    //    public function isAuthorized($user)
+    //    {
+    //        return false;
+    //    }
+
+
+    //    public function beforeFilter(Event $event)
+    //    {
+    //        parent::beforeFilter($event);
+    //
+    //        $this->Authentication->allowUnauthenticated(
+    //            [
+    //                'view',
+    //                'index',
+    //                'display',
+    //                'login',
+    //                'logout'
+    //            ]
+    //        );
+    //    }
 }
