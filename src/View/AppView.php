@@ -35,10 +35,9 @@ class AppView extends View
      *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         $this->loadHelper('BugsData');
         $this->loadHelper('Paginator', ['templates' => 'paginator-templates']);
-        //        $this->loadHelper('Authentication.Identity');
     }
 }

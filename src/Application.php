@@ -41,7 +41,8 @@ use Psr\Http\Message\ServerRequestInterface;
  * This defines the bootstrapping logic and middleware layers you
  * want to use in your application.
  */
-class Application extends BaseApplication implements AuthorizationServiceProviderInterface, AuthenticationServiceProviderInterface
+class Application extends BaseApplication implements AuthorizationServiceProviderInterface,
+    AuthenticationServiceProviderInterface
 {
     /**
      * {@inheritDoc}
@@ -79,21 +80,10 @@ class Application extends BaseApplication implements AuthorizationServiceProvide
     public function middleware($middlewareQueue)
     {
         $middlewareQueue
-            // Catch any exceptions in the lower layers,
-            // and make an error page/response
             ->add(new ErrorHandlerMiddleware(null, Configure::read('Error')))
-
-            // Handle plugin/theme assets like CakePHP normally does.
             ->add(new AssetMiddleware([
                 'cacheTime' => Configure::read('Asset.cacheTime'),
             ]))
-
-            // Add routing middleware.
-            // If you have a large number of routes connected, turning on routes
-            // caching in production could improve performance. For that when
-            // creating the middleware instance specify the cache config name by
-            // using it's second constructor argument:
-            // `new RoutingMiddleware($this, '_cake_routes_')`
             ->add(new RoutingMiddleware($this))
             ->add(new AuthenticationMiddleware($this))
             ->add(new AuthorizationMiddleware($this, [
@@ -109,8 +99,8 @@ class Application extends BaseApplication implements AuthorizationServiceProvide
                     ],
                 ],
             ]));
+
         if (Configure::read('debug')) {
-            // Disable authz for debugkit
             $middlewareQueue->add(function ($req, $res, $next) {
                 if ($req->getParam('plugin') === 'DebugKit') {
                     $req->getAttribute('authorization')->skipAuthorization();
@@ -118,13 +108,14 @@ class Application extends BaseApplication implements AuthorizationServiceProvide
                 return $next($req, $res);
             });
         }
+
         return $middlewareQueue;
     }
 
     /**
      * @return void
      */
-    protected function bootstrapCli()
+    protected function bootstrapCli(): void
     {
         try {
             $this->addPlugin('Bake');
@@ -135,16 +126,33 @@ class Application extends BaseApplication implements AuthorizationServiceProvide
         $this->addPlugin('Migrations');
     }
 
-    public function getAuthorizationService(ServerRequestInterface $request, ResponseInterface $response)
+    /**
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface      $response
+     *
+     * @return AuthorizationService
+     */
+    public function getAuthorizationService(
+        ServerRequestInterface $request,
+        ResponseInterface      $response
+    ): AuthorizationService
     {
-        //        $resolver = new OrmResolver();
         $resolver = new MapResolver();
         $resolver->map(Bug::class, BugPolicy::class);
 
         return new AuthorizationService($resolver);
     }
 
-    public function getAuthenticationService(ServerRequestInterface $request, ResponseInterface $response)
+    /**
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface      $response
+     *
+     * @return AuthenticationService
+     */
+    public function getAuthenticationService(
+        ServerRequestInterface $request,
+        ResponseInterface      $response
+    ): AuthenticationService
     {
         $service = new AuthenticationService();
         $service->setConfig([

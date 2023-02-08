@@ -15,9 +15,10 @@
 
 namespace App\Controller;
 
+use Authentication\Controller\Component\AuthenticationComponent;
+use Authorization\Controller\Component\AuthorizationComponent;
 use Cake\Controller\Controller;
-use Cake\Event\Event;
-use Cake\Event\EventInterface;
+use Exception;
 
 /**
  * Application Controller
@@ -25,11 +26,13 @@ use Cake\Event\EventInterface;
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
  *
+ * @property AuthorizationComponent  $Authorization
+ * @property AuthenticationComponent $Authentication
+ *
  * @link https://book.cakephp.org/3/en/controllers.html#the-app-controller
  */
 class AppController extends Controller
 {
-
     /**
      * Initialization hook method.
      *
@@ -38,70 +41,15 @@ class AppController extends Controller
      * e.g. `$this->loadComponent('Security');`
      *
      * @return void
+     * @throws Exception
      */
     public function initialize()
     {
         parent::initialize();
 
-        $this->loadComponent('RequestHandler', [
-            'enableBeforeRedirect' => false,
-        ]);
+        $this->loadComponent('RequestHandler', ['enableBeforeRedirect' => false,]);
         $this->loadComponent('Flash');
-
-        /*
-         * Enable the following component for recommended CakePHP security settings.
-         * see https://book.cakephp.org/3/en/controllers/components/security.html
-         */
-        //$this->loadComponent('Security');
-
-        //        $this->loadComponent('Auth', [
-        ////            'authorize'=> 'Controller',
-        //            'authenticate' => [
-        //                'Form' => [
-        //                    'fields' => [
-        //                        'username' => 'email',
-        //                        'password' => 'password'
-        //                    ]
-        //                ]
-        //            ],
-        //            'loginAction' => [
-        //                'controller' => 'Users',
-        //                'action' => 'login'
-        //            ],
-        //            // If unauthorized, return them to page they were just on
-        //            'unauthorizedRedirect' => $this->referer()
-        //        ]);
-
-        $this->loadComponent('Authentication.Authentication', [
-
-        ]);
-
-        $this->loadComponent('Authorization.Authorization', [
-            //            'identityCheckEvent' => 'Controller.initialize',
-        ]);
-
-        // Allow the display action so our PagesController
-        // continues to work. Also enable the read only actions.
-        //        $this->Auth->allow(['display', 'view', 'index']);
+        $this->loadComponent('Authentication.Authentication');
+        $this->loadComponent('Authorization.Authorization');
     }
-    //    public function isAuthorized($user)
-    //    {
-    //        return false;
-    //    }
-
-
-    //    public function beforeFilter(Event $event)
-    //    {
-    //        parent::beforeFilter($event);
-    //
-    //        $this->Authentication->allowUnauthenticated(
-    //            [
-    //                'view',
-    //                'index',
-    //                'display',
-    //                'login',
-    //                'logout'
-    //            ]
-    //        );
-    //    }
 }

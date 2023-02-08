@@ -13,12 +13,12 @@ class BugPolicy
     /**
      * Check if $user can create Bug
      *
-     * @param Authorization\IdentityInterface $user The user.
-     * @param App\Model\Entity\Bug            $bug
+     * @param IdentityInterface $user The user.
+     * @param Bug               $bug
      *
      * @return bool
      */
-    public function canCreate(IdentityInterface $user, Bug $bug)
+    public function canCreate(IdentityInterface $user, Bug $bug): bool
     {
         return true;
     }
@@ -26,8 +26,8 @@ class BugPolicy
     /**
      * Check if $user can update Bug
      *
-     * @param Authorization\IdentityInterface $user The user.
-     * @param App\Model\Entity\Bug            $bug
+     * @param IdentityInterface $user The user.
+     * @param Bug               $bug
      *
      * @return bool
      */
@@ -39,12 +39,12 @@ class BugPolicy
     /**
      * Check if $user can delete Bug
      *
-     * @param Authorization\IdentityInterface $user The user.
-     * @param App\Model\Entity\Bug            $bug
+     * @param IdentityInterface $user The user.
+     * @param Bug               $bug
      *
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, Bug $bug)
+    public function canDelete(IdentityInterface $user, Bug $bug): bool
     {
         return $user->id == $bug->author_id;
     }
@@ -52,12 +52,12 @@ class BugPolicy
     /**
      * Check if $user can view Bug
      *
-     * @param Authorization\IdentityInterface $user The user.
-     * @param App\Model\Entity\Bug            $bug
+     * @param IdentityInterface $user The user.
+     * @param Bug               $bug
      *
      * @return bool
      */
-    public function canView(IdentityInterface $user, Bug $bug)
+    public function canView(IdentityInterface $user, Bug $bug): bool
     {
         return true;
     }

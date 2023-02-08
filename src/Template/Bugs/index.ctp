@@ -119,17 +119,19 @@
         <?php endforeach; ?>
         </tbody>
     </table>
-    <div class="text-center">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                <li class="page-item"><?= $this->Paginator->prev('<<') ?></li>
-                <?= $this->Paginator->numbers() ?>
-                <li class="page-item"><?= $this->Paginator->next('>>') ?></li>
-            </ul>
-        </nav>
+    <?php if ($this->Paginator->total() > 1): ?>
+        <div class="text-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item"><?= $this->Paginator->prev('<<') ?></li>
+                    <?= $this->Paginator->numbers() ?>
+                    <li class="page-item"><?= $this->Paginator->next('>>') ?></li>
+                </ul>
+            </nav>
 
-        <div class="alert alert-light" role="alert">
-            <?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?>
+            <div class="alert alert-light" role="alert">
+                <?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?>
+            </div>
         </div>
-    </div>
+    <?php endif ?>
 </div>

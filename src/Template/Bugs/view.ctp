@@ -56,11 +56,11 @@
         </tr>
         <tr>
             <th scope="row"><?= __('CreateAt') ?></th>
-            <td><?= h($bug->createAt) ?></td>
+            <td><?= h(date_format($bug->createAt, 'Y-m-d H:i:s')) ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('UpdateAt') ?></th>
-            <td><?= h($bug->updateAt) ?></td>
+            <td><?= h(date_format($bug->updateAt, 'Y-m-d H:i:s')) ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Description') ?></th>

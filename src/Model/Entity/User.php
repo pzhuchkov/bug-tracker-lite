@@ -41,12 +41,17 @@ class User extends Entity
         'password',
     ];
 
-    protected function _setPassword($value)
+    /**
+     * Set hash password
+     *
+     * @param $value
+     *
+     * @return false|string|void
+     */
+    protected function _setPassword($value): ?string
     {
         if (strlen($value)) {
-            $hasher = new DefaultPasswordHasher();
-
-            return $hasher->hash($value);
+            return (new DefaultPasswordHasher())->hash($value);
         }
     }
 }

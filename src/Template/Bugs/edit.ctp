@@ -4,6 +4,7 @@
  * @var \App\Model\Entity\Bug $bug
  * @var array                 $typeList
  * @var array                 $statusList
+ * @var array                 $users
  */
 ?>
 

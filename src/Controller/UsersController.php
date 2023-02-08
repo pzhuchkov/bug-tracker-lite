@@ -2,37 +2,25 @@
 
 namespace App\Controller;
 
-use App\Controller\AppController;
+use App\Model\Table\UsersTable;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\Response;
 
 /**
  * Users Controller
  *
- * @property \App\Model\Table\UsersTable $Users
+ * @property UsersTable $Users
  *
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class UsersController extends AppController
 {
-    public function initialize()
-    {
-        parent::initialize();
-        //        $this->Auth->allow(['logout']);
-    }
-
-    public function beforeFilter(\Cake\Event\EventInterface $event)
-    {
-        parent::beforeFilter($event);
-
-        //        $this->Authentication->allowUnauthenticated(['login']);
-        $this->Authentication->allowUnauthenticated(['view', 'index', 'login', 'display']);
-    }
-
     /**
      * Index method
      *
-     * @return \Cake\Http\Response|null
+     * @return void
      */
-    public function index()
+    public function index(): void
     {
         $this->Authorization->skipAuthorization();
         $users = $this->paginate($this->Users);
@@ -45,25 +33,22 @@ class UsersController extends AppController
      *
      * @param string|null $id User id.
      *
-     * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @return void
+     * @throws RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view(string $id = null): void
     {
         $this->Authorization->skipAuthorization();
-        $user = $this->Users->get($id, [
-            'contain' => [],
-        ]);
-
+        $user = $this->Users->get($id, ['contain' => [],]);
         $this->set('user', $user);
     }
 
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     * @return Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function add(): ?Response
     {
         $this->Authorization->skipAuthorization();
         $user = $this->Users->newEntity();
@@ -77,6 +62,8 @@ class UsersController extends AppController
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $this->set(compact('user'));
+
+        return null;
     }
 
     /**
@@ -84,10 +71,10 @@ class UsersController extends AppController
      *
      * @param string|null $id User id.
      *
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @return Response|null Redirects on successful edit, renders view otherwise.
+     * @throws RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit(string $id = null): ?Response
     {
         $this->Authorization->skipAuthorization();
         $user = $this->Users->get($id, [
@@ -103,6 +90,8 @@ class UsersController extends AppController
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $this->set(compact('user'));
+
+        return null;
     }
 
     /**
@@ -110,10 +99,10 @@ class UsersController extends AppController
      *
      * @param string|null $id User id.
      *
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @return Response|null Redirects to index.
+     * @throws RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete(string $id = null): ?Response
     {
         $this->Authorization->skipAuthorization();
         $this->request->allowMethod(['post', 'delete']);
@@ -127,26 +116,41 @@ class UsersController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    public function login()
+    /**
+     * Login action
+     *
+     * @return Response|void|null
+     */
+    public function login(): ?Response
     {
-        $this->Authorization->skipAuthorization();
+        //        $this->Authorization->skipAuthorization();
+
         $result = $this->Authentication->getResult();
-        // If the user is logged in send them away.
+
         if ($result->isValid()) {
             $target = $this->Authentication->getLoginRedirect() ?? '/bugs';
             return $this->redirect($target);
         }
+
         if ($this->request->is('post') && !$result->isValid()) {
             $this->Flash->error('Invalid username or password');
         }
+
+        return null;
     }
 
-    public function logout()
+    /**
+     * Logout action
+     *
+     * @return Response|null
+     */
+    public function logout(): ?Response
     {
         $this->Authorization->skipAuthorization();
+
         $this->Flash->success('You are now logged out.');
-        //        return $this->redirect($this->Auth->logout());
         $this->Authentication->logout();
+
         return $this->redirect(['controller' => 'Users', 'action' => 'login']);
     }
 }

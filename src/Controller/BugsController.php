@@ -2,14 +2,16 @@
 
 namespace App\Controller;
 
-use App\Controller\AppController;
 use App\Model\Entity\Bug;
+use App\Model\Table\BugsTable;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\Response;
 use Cake\I18n\FrozenTime;
 
 /**
  * Bugs Controller
  *
- * @property \App\Model\Table\BugsTable $Bugs
+ * @property BugsTable $Bugs
  *
  * @method \App\Model\Entity\Bug[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
@@ -18,9 +20,9 @@ class BugsController extends AppController
     /**
      * Index method
      *
-     * @return \Cake\Http\Response|null
+     * @return Response|null
      */
-    public function index()
+    public function index(): ?Response
     {
         $this->Authorization->skipAuthorization();
 
@@ -51,6 +53,8 @@ class BugsController extends AppController
 
         $this->set('typeList', array_merge_recursive([0 => ''], Bug::getTypeList()));
         $this->set(compact('bugs'));
+
+        return null;
     }
 
     /**
@@ -58,10 +62,10 @@ class BugsController extends AppController
      *
      * @param string|null $id Bug id.
      *
-     * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @return Response|null
+     * @throws RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view(string $id = null): ?Response
     {
         $this->Authorization->skipAuthorization();
         $bug = $this->Bugs->get($id, [
@@ -69,14 +73,16 @@ class BugsController extends AppController
         ]);
 
         $this->set('bug', $bug);
+
+        return null;
     }
 
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     * @return Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function add(): ?Response
     {
         $bug = $this->Bugs->newEntity();
 
@@ -119,13 +125,13 @@ class BugsController extends AppController
 
         }
 
-        $users = $this->Bugs->Users->find('list')->toArray();
-
-        $this->set('users', $users);
+        $this->set('users', $this->Bugs->Users->find('list')->toArray());
         $this->set('typeList', Bug::getTypeList());
         $this->set('statusList', Bug::getStatusList());
 
         $this->set(compact('bug'));
+
+        return null;
     }
 
     /**
@@ -133,10 +139,10 @@ class BugsController extends AppController
      *
      * @param string|null $id Bug id.
      *
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @return Response|null Redirects on successful edit, renders view otherwise.
+     * @throws RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit(string $id = null): ?Response
     {
         $bug = $this->Bugs->get($id, [
             'contain' => [],
@@ -171,6 +177,8 @@ class BugsController extends AppController
         $this->set('statusList', Bug::getStatusList());
 
         $this->set(compact('bug'));
+
+        return null;
     }
 
     /**
@@ -178,10 +186,10 @@ class BugsController extends AppController
      *
      * @param string|null $id Bug id.
      *
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @return Response|null Redirects to index.
+     * @throws RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete(string $id = null): ?Response
     {
         $this->request->allowMethod(['post', 'delete']);
         $bug = $this->Bugs->get($id);
