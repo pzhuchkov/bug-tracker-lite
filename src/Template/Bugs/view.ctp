@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView     $this
  * @var \App\Model\Entity\Bug $bug
+ * @var bool                  $isAuth
  */
 ?>
 
@@ -15,6 +16,7 @@
             <li><?= $this->Html->link(__('Bugs'), ['controller' => 'Bugs', 'action' => 'index'], ['class' => 'nav-link px-2 link-dark']) ?></li>
             <li><?= $this->Html->link(__('New Bug'), ['controller' => 'Bugs', 'action' => 'add'], ['class' => 'nav-link px-2 link-dark']) ?></li>
             <li><?= $this->Html->link(__('Users'), ['controller' => 'Users', 'action' => 'index'], ['class' => 'nav-link px-2 link-dark']) ?></li>
+            <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add'], ['class' => 'nav-link px-2 link-dark']) ?></li>
         </ul>
 
         <div class="col-md-3 text-end">

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Model\Table\UsersTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\Event;
 use Cake\Http\Response;
 
 /**
@@ -15,6 +16,30 @@ use Cake\Http\Response;
  */
 class UsersController extends AppController
 {
+    /**
+     * @param Event $event
+     *
+     * @return Response|void|null
+     */
+    public function beforeFilter(Event $event): ?Response
+    {
+        parent::beforeFilter($event);
+
+        $this->Authentication->allowUnauthenticated(
+            [
+                'view',
+                'index',
+                'login',
+                'display',
+                'add',
+            ]
+        );
+
+        $this->set('isAuth', $this->Authentication->getResult()->isValid());
+
+        return null;
+    }
+
     /**
      * Index method
      *
@@ -123,7 +148,7 @@ class UsersController extends AppController
      */
     public function login(): ?Response
     {
-        //        $this->Authorization->skipAuthorization();
+        $this->Authorization->skipAuthorization();
 
         $result = $this->Authentication->getResult();
 

@@ -25,11 +25,11 @@ use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Exception\MissingIdentityException;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Policy\MapResolver;
-use Authorization\Policy\OrmResolver;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
+use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Psr\Http\Message\ResponseInterface;
@@ -73,11 +73,11 @@ class Application extends BaseApplication implements AuthorizationServiceProvide
     /**
      * Setup the middleware queue your application will use.
      *
-     * @param \Cake\Http\MiddlewareQueue $middlewareQueue The middleware queue to setup.
+     * @param MiddlewareQueue $middlewareQueue The middleware queue to setup.
      *
-     * @return \Cake\Http\MiddlewareQueue The updated middleware queue.
+     * @return MiddlewareQueue The updated middleware queue.
      */
-    public function middleware($middlewareQueue)
+    public function middleware($middlewareQueue): MiddlewareQueue
     {
         $middlewareQueue
             ->add(new ErrorHandlerMiddleware(null, Configure::read('Error')))

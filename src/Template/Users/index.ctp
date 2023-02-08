@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView                                             $this
  * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
+ * @var bool                                                          $isAuth
  */
 ?>
 
@@ -19,10 +20,12 @@
             <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add'], ['class' => 'nav-link px-2 link-dark']) ?></li>
         </ul>
 
-        <div class="col-md-3 text-end">
-            <button type="button"
-                    class="btn btn-primary"><?= $this->Html->link(__('Logout'), ['controller' => 'Users', 'action' => 'logout']) ?></button>
-        </div>
+        <?php if ($isAuth === true): ?>
+            <div class="col-md-3 text-end">
+                <button type="button"
+                        class="btn btn-primary"><?= $this->Html->link(__('Logout'), ['controller' => 'Users', 'action' => 'logout']) ?></button>
+            </div>
+        <?php endif; ?>
     </header>
     <?php if ($message = $this->Flash->render()): ?>
         <div class="alert alert-warning" role="alert">
