@@ -3,7 +3,6 @@
  * @var \App\View\AppView                                            $this
  * @var \App\Model\Entity\Bug[]|\Cake\Collection\CollectionInterface $bugs
  * @var array                                                        $typeList
- * @var bool                                                         $isAuth
  */
 ?>
 
@@ -20,12 +19,10 @@
             <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add'], ['class' => 'nav-link px-2 link-dark']) ?></li>
         </ul>
 
-        <?php if ($isAuth === true): ?>
             <div class="col-md-3 text-end">
                 <button type="button"
                         class="btn btn-primary"><?= $this->Html->link(__('Logout'), ['controller' => 'Users', 'action' => 'logout']) ?></button>
             </div>
-        <?php endif; ?>
     </header>
 
     <?php

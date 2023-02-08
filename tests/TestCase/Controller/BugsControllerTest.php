@@ -31,7 +31,8 @@ class BugsControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/pages/home');
+        $this->assertRedirectContains('/login');
     }
 
     /**

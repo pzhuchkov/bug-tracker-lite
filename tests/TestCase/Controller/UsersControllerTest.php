@@ -3,6 +3,7 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\UsersController;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
@@ -24,6 +25,28 @@ class UsersControllerTest extends TestCase
         'app.Users',
     ];
 
+    protected $_testUserData = [
+        'email'    => 'unit-test@example.com',
+        'password' => 'unit-test-password',
+    ];
+
+    /**
+     * Мокаем ключик
+     *
+     * @return void
+     */
+    protected function _mockCsrf(): void
+    {
+        $token = 'my-csrf-token';
+        $this->cookie('csrfToken', $token);
+
+        $this->configRequest([
+            'headers' => [
+                'X-CSRF-Token' => $token,
+            ],
+        ]);
+    }
+
     /**
      * Test index method
      *
@@ -31,7 +54,12 @@ class UsersControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/users');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Bugs');
+        $this->assertResponseContains('Users');
+        $this->assertResponseContains('Email');
+        $this->assertResponseContains('Lorem');
     }
 
     /**
@@ -41,7 +69,12 @@ class UsersControllerTest extends TestCase
      */
     public function testView()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/users/view/1');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Bugs');
+        $this->assertResponseContains('Users');
+        $this->assertResponseContains('Email');
+        $this->assertResponseContains('Lorem');
     }
 
     /**
@@ -51,7 +84,22 @@ class UsersControllerTest extends TestCase
      */
     public function testAdd()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/users/add');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Bugs');
+        $this->assertResponseContains('Users');
+        $this->assertResponseContains('Add User');
+        $this->assertResponseContains('Email');
+        $this->assertResponseContains('Password');
+
+        $this->_mockCsrf();
+
+        $this->post('/users/add', $this->_testUserData);
+
+        $this->assertRedirect('/users');
+        $articles = TableRegistry::getTableLocator()->get('Users');
+        $query = $articles->find()->where(['email' => $this->_testUserData['email']]);
+        $this->assertEquals(1, $query->count());
     }
 
     /**
@@ -61,7 +109,20 @@ class UsersControllerTest extends TestCase
      */
     public function testEdit()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/users/edit/1');
+        $this->assertRedirectContains('/login');
+
+        $this->_mockCsrf();
+        $this->post('/users/add', $this->_testUserData);
+        $this->assertRedirect('/users');
+        $articles = TableRegistry::getTableLocator()->get('Users');
+        $query = $articles->find()->where(['email' => $this->_testUserData['email']]);
+        $this->assertEquals(1, $query->count());
+
+        $this->_mockCsrf();
+        $this->post('/users/login?redirect=%2Fusers%2Fedit%2F2', $this->_testUserData);
+
+        $this->assertRedirectContains('/users/edit/2');
     }
 
     /**
@@ -71,6 +132,7 @@ class UsersControllerTest extends TestCase
      */
     public function testDelete()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/users/edit/1');
+        $this->assertRedirectContains('/login');
     }
 }
