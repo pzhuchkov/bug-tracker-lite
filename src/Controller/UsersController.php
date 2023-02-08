@@ -34,7 +34,6 @@ class UsersController extends AppController
      */
     public function index()
     {
-
         $this->Authorization->skipAuthorization();
         $users = $this->paginate($this->Users);
 
@@ -51,6 +50,7 @@ class UsersController extends AppController
      */
     public function view($id = null)
     {
+        $this->Authorization->skipAuthorization();
         $user = $this->Users->get($id, [
             'contain' => [],
         ]);
@@ -65,6 +65,7 @@ class UsersController extends AppController
      */
     public function add()
     {
+        $this->Authorization->skipAuthorization();
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
@@ -88,6 +89,7 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
+        $this->Authorization->skipAuthorization();
         $user = $this->Users->get($id, [
             'contain' => [],
         ]);
@@ -113,6 +115,7 @@ class UsersController extends AppController
      */
     public function delete($id = null)
     {
+        $this->Authorization->skipAuthorization();
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {

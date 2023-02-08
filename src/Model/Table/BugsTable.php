@@ -35,6 +35,15 @@ class BugsTable extends Table
     {
         parent::initialize($config);
 
+        $this->addBehavior('Timestamp', [
+            'events' => [
+                'Model.beforeSave' => [
+                    'created_at' => 'new',
+                    'updated_at' => 'always',
+                ],
+            ],
+        ]);
+
         $this->setTable('bugs');
         $this->setDisplayField('title');
         $this->setPrimaryKey('id');

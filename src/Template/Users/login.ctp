@@ -10,29 +10,33 @@
             <?= $message ?>
         </div>
     <?php endif; ?>
-    <?= $this->Form->create() ?>
-    <div class="mb-3">
-        <?= $this->Form->control(
-            'email',
-            [
-                'label' => [
-                    'class' => 'form-label',
-                ],
-                'class' => 'form-control',
-            ]
-        ) ?>
+    <div class="row justify-content-md-center">
+        <div class="col-5">
+            <?= $this->Form->create() ?>
+            <div class="mb-3">
+                <?= $this->Form->control(
+                    'email',
+                    [
+                        'label' => [
+                            'class' => 'form-label',
+                        ],
+                        'class' => 'form-control',
+                    ]
+                ) ?>
+            </div>
+            <div class="mb-3">
+                <?= $this->Form->control(
+                    'password',
+                    [
+                        'label' => [
+                            'class' => 'form-label',
+                        ],
+                        'class' => 'form-control',
+                    ]
+                ) ?>
+            </div>
+            <?= $this->Form->button('Login', ['class' => 'btn btn-primary']) ?>
+            <?= $this->Form->end() ?>
+        </div>
     </div>
-    <div class="mb-3">
-        <?= $this->Form->control(
-            'password',
-            [
-                'label' => [
-                    'class' => 'form-label',
-                ],
-                'class' => 'form-control',
-            ]
-        ) ?>
-    </div>
-    <?= $this->Form->button('Login', ['class' => 'btn btn-primary']) ?>
-    <?= $this->Form->end() ?>
 </div>

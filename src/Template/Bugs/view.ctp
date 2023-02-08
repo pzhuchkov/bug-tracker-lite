@@ -4,18 +4,32 @@
  * @var \App\Model\Entity\Bug $bug
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Bug'), ['action' => 'edit', $bug->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Bug'), ['action' => 'delete', $bug->id], ['confirm' => __('Are you sure you want to delete # {0}?', $bug->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Bugs'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Bug'), ['action' => 'add']) ?> </li>
-    </ul>
-</nav>
-<div class="bugs view large-9 medium-8 columns content">
-    <h3><?= h($bug->title) ?></h3>
-    <table class="vertical-table">
+
+<div class="container">
+    <header
+        class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+            <?= $this->fetch('title') ?>
+        </a>
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+            <li><?= $this->Html->link(__('Bugs'), ['controller' => 'Bugs', 'action' => 'index'], ['class' => 'nav-link px-2 link-dark']) ?></li>
+            <li><?= $this->Html->link(__('New Bug'), ['controller' => 'Bugs', 'action' => 'add'], ['class' => 'nav-link px-2 link-dark']) ?></li>
+            <li><?= $this->Html->link(__('Users'), ['controller' => 'Users', 'action' => 'index'], ['class' => 'nav-link px-2 link-dark']) ?></li>
+        </ul>
+
+        <div class="col-md-3 text-end">
+            <button type="button"
+                    class="btn btn-primary"><?= $this->Html->link(__('Logout'), ['controller' => 'Users', 'action' => 'logout']) ?></button>
+        </div>
+    </header>
+    <?php if ($message = $this->Flash->render()): ?>
+        <div class="alert alert-warning" role="alert">
+            <?= $message ?>
+        </div>
+    <?php endif; ?>
+
+    <h1 class="display-3"><?= h($bug->title) ?></h1>
+    <table class="table ">
         <tr>
             <th scope="row"><?= __('Title') ?></th>
             <td><?= h($bug->title) ?></td>
@@ -54,7 +68,9 @@
         </tr>
     </table>
     <div class="row">
-        <h4><?= __('Comment') ?></h4>
-        <?= $this->Text->autoParagraph(h($bug->comment)); ?>
+        <div class="bd-example">
+            <h4><?= __('Comment') ?></h4>
+            <?= $this->Text->autoParagraph(h($bug->comment)); ?>
+        </div>
     </div>
 </div>

@@ -54,6 +54,12 @@ class BugsController extends AppController
     public function add()
     {
         $bug = $this->Bugs->newEntity();
+
+        if ($this->Authorization->can($bug, 'create') === false) {
+            $this->Flash->error(__('Access denied.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         if ($this->request->is('post')) {
             $bug = $this->Bugs->patchEntity($bug, $this->request->getData());
 
@@ -62,14 +68,35 @@ class BugsController extends AppController
             $bug->author = $user->email;
             $bug->author_id = $user->id;
 
+            $bug->createAt = FrozenTime::create();
+
+            if ($bug->has('assigned_id')) {
+                $bug->assigned = $this->Bugs->Users->get($bug->assigned_id)->email;
+            }
+
             if ($this->Bugs->save($bug)) {
                 $this->Flash->success(__('The bug has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The bug could not be saved. Please, try again.'));
+
+            $errorsMessage = '';
+
+            if ($bug->hasErrors()) {
+                foreach ($bug->getErrors() as $fieldName => $errors) {
+                    foreach ($errors as $type => $message) {
+                        $errorsMessage .= $fieldName . ' - ' . $message . '. ';
+                    }
+                }
+            }
+
+            $this->Flash->error(__('The bug could not be saved. Please, try again. ' . trim($errorsMessage)));
+
         }
 
+        $users = $this->Bugs->Users->find('list')->toArray();
+
+        $this->set('users', $users);
         $this->set('typeList', Bug::getTypeList());
         $this->set('statusList', Bug::getStatusList());
 
@@ -98,10 +125,11 @@ class BugsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $bug = $this->Bugs->patchEntity($bug, $this->request->getData());
 
-            $user = $this->Authentication->getIdentity();
+            $bug->updateAt = FrozenTime::create();
 
-            $bug->assigned = $user->email;
-            $bug->assigned_id = $user->id;
+            if ($bug->has('assigned_id')) {
+                $bug->assigned = $this->Bugs->Users->get($bug->assigned_id)->email;
+            }
 
             if ($this->Bugs->save($bug)) {
                 $this->Flash->success(__('The bug has been saved.'));
@@ -111,6 +139,9 @@ class BugsController extends AppController
             $this->Flash->error(__('The bug could not be saved. Please, try again.'));
         }
 
+        $users = $this->Bugs->Users->find('list')->toArray();
+
+        $this->set('users', $users);
         $this->set('typeList', Bug::getTypeList());
         $this->set('statusList', Bug::getStatusList());
 
