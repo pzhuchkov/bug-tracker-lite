@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView                                            $this
  * @var \App\Model\Entity\Bug[]|\Cake\Collection\CollectionInterface $bugs
+ * @var array                                                        $typeList
  */
 ?>
 
@@ -22,12 +23,69 @@
                     class="btn btn-primary"><?= $this->Html->link(__('Logout'), ['controller' => 'Users', 'action' => 'logout']) ?></button>
         </div>
     </header>
+
+    <?php
+    echo $this->Form->create(
+        null,
+        [
+            'type' => 'get',
+            'url'  => $this->request->getRequestTarget(),
+        ]
+    )
+    ?>
+    <div class="row g-3  py-3 mb-4">
+        <div class="col-auto">
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">Filter</span>
+                <?php
+                echo $this->Form->select(
+                    'type',
+                    $typeList,
+                    [
+                        'class'   => 'form-select',
+                        'id'      => 'type',
+                        'default' => $this->request->getQuery('type'),
+                    ]
+                );
+                ?>
+            </div>
+        </div>
+        <?php
+        if ($this->request->getQuery('sort')) {
+            echo $this->Form->hidden('sort', ['val' => $this->request->getQuery('sort')]);
+        }
+        if ($this->request->getQuery('direction')) {
+            echo $this->Form->hidden('direction', ['val' => $this->request->getQuery('direction')]);
+        }
+        ?>
+        <div class="col-auto">
+            <input id="from-date" type="text" class="form-control" placeholder="From Date" name="from-date"
+                   value="<?= $this->request->getQuery('from-date') ?>" autocomplete="off">
+        </div>
+        <div class="col-auto">
+            <input id="to-date" type="text" class="form-control" placeholder="To Date" name="to-date"
+                   value="<?= $this->request->getQuery('to-date') ?>" autocomplete="off">
+        </div>
+        <div class="col-auto">
+            <?= $this->Form->button(__('Find'), ['class' => 'btn btn-primary']) ?>
+        </div>
+        <div class="col-auto">
+            <?php
+            echo $this->Html->link('Reset', ['action' => 'index'], ['class' => 'btn btn-primary'])
+            ?>
+        </div>
+        <script>
+            jQuery('#from-date').datetimepicker({format: 'Y.m.d H:i:s'});
+            jQuery('#to-date').datetimepicker({format: 'Y.m.d H:i:s'});
+        </script>
+    </div>
+    <?= $this->Form->end() ?>
+
     <?php if ($message = $this->Flash->render()): ?>
         <div class="alert alert-warning" role="alert">
             <?= $message ?>
         </div>
     <?php endif; ?>
-
     <table class="table table-bordered">
         <thead>
         <tr>

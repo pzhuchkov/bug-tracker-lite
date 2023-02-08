@@ -23,8 +23,33 @@ class BugsController extends AppController
     public function index()
     {
         $this->Authorization->skipAuthorization();
-        $bugs = $this->paginate($this->Bugs);
 
+        $query = $this->Bugs->find();
+        if ($this->request->getQuery('type')) {
+            $query = $query->where(
+                [
+                    'type' => $this->request->getQuery('type'),
+                ]
+            );
+        }
+        if ($this->request->getQuery('from-date')) {
+            $query = $query->where(
+                [
+                    'createAt >' => $this->request->getQuery('from-date'),
+                ]
+            );
+        }
+        if ($this->request->getQuery('to-date')) {
+            $query = $query->where(
+                [
+                    'createAt <' => $this->request->getQuery('to-date'),
+                ]
+            );
+        }
+
+        $bugs = $this->paginate($query);
+
+        $this->set('typeList', array_merge_recursive([0 => ''], Bug::getTypeList()));
         $this->set(compact('bugs'));
     }
 

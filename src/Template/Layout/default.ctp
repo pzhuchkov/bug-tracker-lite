@@ -24,6 +24,13 @@
     </title>
     <?= $this->Html->meta('icon') ?>
     <?= $this->Html->css('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css') ?>
+    <?= $this->Html->css('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css') ?>
+    <?= $this->Html->css('jquery.datetimepicker.min.css') ?>
+    <?= $this->Html->script('jquery.js') ?>
+    <?= $this->Html->script('jquery.datetimepicker.full.min.js') ?>
+    <script>
+        jQuery.datetimepicker.setLocale('ru');
+    </script>
     <style>
         header .btn-primary a {
             text-decoration: none;
@@ -34,6 +41,7 @@
 <body>
 
 <?= $this->fetch('content') ?>
+
 
 </body>
 </html>

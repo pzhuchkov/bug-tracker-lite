@@ -53,7 +53,7 @@
                             'label'   => [
                                 'class' => 'form-label',
                             ],
-                            'class'   => 'form-control',
+                            'class'   => 'form-select',
                         ]
                     );
                     ?>
