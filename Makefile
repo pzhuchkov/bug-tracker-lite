@@ -8,6 +8,7 @@ DOCKER_DIRECTORY=docker
 DOCKER_COMPOSE=docker-compose
 DOCKER_SYNC=docker-sync-stack
 PHP_UNIT=vendor/bin/phpunit
+PHP_CAKE=bin/cake
 PHP_CONTAINER=php_cake
 GIT=git
 VERSION=$(shell date '+1.0.0.%Y%m%d-%H%M%S')
@@ -20,6 +21,9 @@ rc:
 
 test:
 	$(PHP) $(PHP_UNIT) --configuration phpunit.xml.dist
+
+migrations:
+	$(PHP_CAKE) migrations migrate
 
 composer:
 	$(COMPOSER) update  --no-progress --profile --prefer-dist

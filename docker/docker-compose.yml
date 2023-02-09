@@ -14,7 +14,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
   php_cake:
     build:
-      context: php8-fpm
+      context: php7-fpm
       args:
         USER_UID: ${USER_UID}
     volumes:
