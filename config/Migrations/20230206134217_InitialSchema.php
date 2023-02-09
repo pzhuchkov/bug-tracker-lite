@@ -24,8 +24,8 @@ class InitialSchema extends AbstractMigration
     author      varchar(256)  null,
     assigned    varchar(256)  null,
     status      int           null,
-    createAt    datetime      not null,
-    updateAt    datetime      null,
+    created    datetime      not null,
+    modified    datetime      null,
     constraint bugs_pk
         primary key (id)
 );

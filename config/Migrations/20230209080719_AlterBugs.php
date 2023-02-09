@@ -14,7 +14,7 @@ class AlterBugs extends AbstractMigration
      */
     public function change()
     {
-        $this->execute('alter table bugs change createAt created datetime not null;');
-        $this->execute('alter table bugs change updateAt modified datetime null;');
+        $this->execute('alter table bugs change created created datetime not null;');
+        $this->execute('alter table bugs change modified modified datetime null;');
     }
 }

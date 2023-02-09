@@ -2,6 +2,7 @@
 
 namespace App\Test\TestCase\View\Helper;
 
+use App\Model\Entity\Bug;
 use App\View\Helper\BugsDataHelper;
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
@@ -43,12 +44,54 @@ class BugsDataHelperTest extends TestCase
     }
 
     /**
-     * Test initial setup
+     * Test method getStatusById with wrong data
      *
      * @return void
      */
-    public function testInitialization()
+    public function testGetStatusByIdWrong()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTextEquals(
+            'Unknown',
+            $this->BugsData->getStatusById(-1)
+        );
+    }
+
+    /**
+     * Test method getStatusById
+     *
+     * @return void
+     */
+    public function testGetStatusById()
+    {
+        $this->assertTextEquals(
+            current(Bug::getStatusList()),
+            $this->BugsData->getStatusById(1)
+        );
+    }
+
+    /**
+     * Test method getTypeById with wrong data
+     *
+     * @return void
+     */
+    public function testGetTypeByIdWrong()
+    {
+        $this->assertTextEquals(
+            'Unknown',
+            $this->BugsData->getTypeById(-1)
+        );
+    }
+
+    /**
+     * Test method getTypeById data
+     *
+     * @return void
+     */
+    public function testGetTypeById()
+    {
+        $this->assertTextEquals(
+            current(Bug::getTypeList()),
+            $this->BugsData->getTypeById(1)
+        );
     }
 }

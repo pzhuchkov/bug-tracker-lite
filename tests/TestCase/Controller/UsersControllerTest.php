@@ -97,8 +97,8 @@ class UsersControllerTest extends TestCase
         $this->post('/users/add', $this->_testUserData);
 
         $this->assertRedirect('/users');
-        $articles = TableRegistry::getTableLocator()->get('Users');
-        $query = $articles->find()->where(['email' => $this->_testUserData['email']]);
+        $users = TableRegistry::getTableLocator()->get('Users');
+        $query = $users->find()->where(['email' => $this->_testUserData['email']]);
         $this->assertEquals(1, $query->count());
     }
 
@@ -115,8 +115,8 @@ class UsersControllerTest extends TestCase
         $this->_mockCsrf();
         $this->post('/users/add', $this->_testUserData);
         $this->assertRedirect('/users');
-        $articles = TableRegistry::getTableLocator()->get('Users');
-        $query = $articles->find()->where(['email' => $this->_testUserData['email']]);
+        $users = TableRegistry::getTableLocator()->get('Users');
+        $query = $users->find()->where(['email' => $this->_testUserData['email']]);
         $this->assertEquals(1, $query->count());
 
         $this->_mockCsrf();
@@ -132,7 +132,8 @@ class UsersControllerTest extends TestCase
      */
     public function testDelete()
     {
-        $this->get('/users/edit/1');
+        $this->_mockCsrf();
+        $this->post('/users/delete/1');
         $this->assertRedirectContains('/login');
     }
 }
