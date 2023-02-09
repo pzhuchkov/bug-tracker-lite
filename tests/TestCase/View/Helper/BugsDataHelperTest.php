@@ -24,7 +24,7 @@ class BugsDataHelperTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $view = new View();
@@ -36,7 +36,7 @@ class BugsDataHelperTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->BugsData);
 
@@ -44,11 +44,11 @@ class BugsDataHelperTest extends TestCase
     }
 
     /**
-     * Test method getStatusById with wrong data
+     * Тест получение кривого статуса
      *
      * @return void
      */
-    public function testGetStatusByIdWrong()
+    public function testGetStatusByIdWrong(): void
     {
         $this->assertTextEquals(
             'Unknown',
@@ -57,11 +57,11 @@ class BugsDataHelperTest extends TestCase
     }
 
     /**
-     * Test method getStatusById
+     * Тест получение правильного статуса
      *
      * @return void
      */
-    public function testGetStatusById()
+    public function testGetStatusById(): void
     {
         $this->assertTextEquals(
             current(Bug::getStatusList()),
@@ -70,11 +70,11 @@ class BugsDataHelperTest extends TestCase
     }
 
     /**
-     * Test method getTypeById with wrong data
+     * Тест получение кривого типа
      *
      * @return void
      */
-    public function testGetTypeByIdWrong()
+    public function testGetTypeByIdWrong(): void
     {
         $this->assertTextEquals(
             'Unknown',
@@ -83,11 +83,11 @@ class BugsDataHelperTest extends TestCase
     }
 
     /**
-     * Test method getTypeById data
+     * Тест получение правильного типа
      *
      * @return void
      */
-    public function testGetTypeById()
+    public function testGetTypeById(): void
     {
         $this->assertTextEquals(
             current(Bug::getTypeList()),

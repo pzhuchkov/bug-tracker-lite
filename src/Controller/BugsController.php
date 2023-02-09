@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -6,7 +7,6 @@ use App\Model\Entity\Bug;
 use App\Model\Table\BugsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Response;
-use Cake\I18n\FrozenTime;
 
 /**
  * Bugs Controller
@@ -37,14 +37,14 @@ class BugsController extends AppController
         if ($this->request->getQuery('from-date')) {
             $query = $query->where(
                 [
-                    'created >' => $this->request->getQuery('from-date'),
+                    'created >=' => $this->request->getQuery('from-date'),
                 ]
             );
         }
         if ($this->request->getQuery('to-date')) {
             $query = $query->where(
                 [
-                    'created <' => $this->request->getQuery('to-date'),
+                    'created <=' => $this->request->getQuery('to-date'),
                 ]
             );
         }

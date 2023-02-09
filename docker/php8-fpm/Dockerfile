@@ -150,13 +150,6 @@ RUN \
     docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
     docker-php-ext-install ldap
 
-# Add key
-RUN mkdir -p /root/.ssh
-ADD id_rsa /root/.ssh/id_rsa
-RUN chmod 700 /root/.ssh/id_rsa
-RUN echo "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
-#RUN echo "TLS_REQCERT never" > /etc/ldap/ldap.conf
-#RUN echo "172.16.2.15    bl-it-ldap-test.int" >> /etc/hosts
 RUN usermod -u ${USER_UID} www-data
 
 WORKDIR /var/www/cake

@@ -2,7 +2,6 @@
 
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\UsersController;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
@@ -17,21 +16,24 @@ class UsersControllerTest extends TestCase
     use IntegrationTestTrait;
 
     /**
-     * Fixtures
-     *
-     * @var array
+     * @var array|string[] Данные для отправки запросов
      */
-    public $fixtures = [
-        'app.Users',
-    ];
-
-    protected $_testUserData = [
+    protected array $_testUserData = [
         'email'    => 'unit-test@example.com',
         'password' => 'unit-test-password',
     ];
 
     /**
-     * Мокаем ключик
+     * Fixtures
+     *
+     * @var array|string[]
+     */
+    public $fixtures = [
+        'app.Users',
+    ];
+
+    /**
+     * Мокаем ключик для отправки формы
      *
      * @return void
      */
@@ -48,11 +50,12 @@ class UsersControllerTest extends TestCase
     }
 
     /**
-     * Test index method
+     * Проверка index
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
-    public function testIndex()
+    public function testIndex(): void
     {
         $this->get('/users');
         $this->assertResponseOk();
@@ -63,11 +66,12 @@ class UsersControllerTest extends TestCase
     }
 
     /**
-     * Test view method
+     * Проверка view
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
-    public function testView()
+    public function testView(): void
     {
         $this->get('/users/view/1');
         $this->assertResponseOk();
@@ -78,9 +82,10 @@ class UsersControllerTest extends TestCase
     }
 
     /**
-     * Test add method
+     * Проверка добавление пользователя
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testAdd()
     {
@@ -103,11 +108,12 @@ class UsersControllerTest extends TestCase
     }
 
     /**
-     * Test edit method
+     * Проверка редактирования пользователя
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
-    public function testEdit()
+    public function testEdit(): void
     {
         $this->get('/users/edit/1');
         $this->assertRedirectContains('/login');
@@ -126,11 +132,12 @@ class UsersControllerTest extends TestCase
     }
 
     /**
-     * Test delete method
+     * Проверка удаления пользователя
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->_mockCsrf();
         $this->post('/users/delete/1');

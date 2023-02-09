@@ -56,7 +56,7 @@ class BugsTable extends Table
      *
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->integer('id')
@@ -108,7 +108,7 @@ class BugsTable extends Table
      *
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->isUnique(['id']));
         $rules->add($rules->existsIn(['author_id'], 'Users'));

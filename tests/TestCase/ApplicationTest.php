@@ -44,6 +44,8 @@ class ApplicationTest extends IntegrationTestCase
         $this->assertSame('Bake', $plugins->get('Bake')->getName());
         $this->assertSame('Migrations', $plugins->get('Migrations')->getName());
         $this->assertSame('DebugKit', $plugins->get('DebugKit')->getName());
+        $this->assertSame('Authorization', $plugins->get('Authorization')->getName());
+        $this->assertSame('Authentication', $plugins->get('Authentication')->getName());
     }
 
     /**
