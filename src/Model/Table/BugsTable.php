@@ -35,14 +35,7 @@ class BugsTable extends Table
     {
         parent::initialize($config);
 
-        $this->addBehavior('Timestamp', [
-            'events' => [
-                'Model.beforeSave' => [
-                    'created_at' => 'new',
-                    'updated_at' => 'always',
-                ],
-            ],
-        ]);
+        $this->addBehavior('Timestamp');
 
         $this->setTable('bugs');
         $this->setDisplayField('title');
@@ -103,15 +96,6 @@ class BugsTable extends Table
         $validator
             ->integer('status')
             ->allowEmptyString('status');
-
-        $validator
-            ->dateTime('createAt')
-            ->requirePresence('createAt', 'create')
-            ->notEmptyDateTime('createAt');
-
-        $validator
-            ->dateTime('updateAt')
-            ->allowEmptyDateTime('updateAt');
 
         return $validator;
     }

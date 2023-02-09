@@ -96,8 +96,8 @@
             <th scope="col"><?= $this->Paginator->sort('status') ?></th>
             <th scope="col"><?= $this->Paginator->sort('author') ?></th>
             <th scope="col"><?= $this->Paginator->sort('assigned') ?></th>
-            <th scope="col"><?= $this->Paginator->sort('createAt') ?></th>
-            <th scope="col"><?= $this->Paginator->sort('updateAt') ?></th>
+            <th scope="col"><?= $this->Paginator->sort('created') ?></th>
+            <th scope="col"><?= $this->Paginator->sort('modified') ?></th>
             <th scope="col" class="actions"><?= __('Actions') ?></th>
         </tr>
         </thead>
@@ -110,8 +110,8 @@
                 <td><?= \App\Model\Entity\Bug::getStatusList()[$bug->status] ?></td>
                 <td><?= h($bug->author) ?></td>
                 <td><?= h($bug->assigned) ?></td>
-                <td><?= h(date_format($bug->createAt, 'Y-m-d H:i:s')) ?></td>
-                <td><?= h($bug->updateAt ? date_format($bug->updateAt, 'Y-m-d H:i:s') : '') ?></td>
+                <td><?= h(date_format($bug->created, 'Y-m-d H:i:s')) ?></td>
+                <td><?= h($bug->modified ? date_format($bug->modified, 'Y-m-d H:i:s') : '') ?></td>
                 <td class="actions">
                     <?= $this->Html->link('Edit', ['action' => 'edit', $bug->id, 'escapeTitle' => true]) ?>
                     <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $bug->id], ['confirm' => __('Are you sure you want to delete # {0}?', $bug->id)]) ?>

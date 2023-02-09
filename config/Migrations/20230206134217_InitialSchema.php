@@ -2,7 +2,7 @@
 
 use Migrations\AbstractMigration;
 
-class Init extends AbstractMigration
+class InitialSchema extends AbstractMigration
 {
     /**
      * Change Method.

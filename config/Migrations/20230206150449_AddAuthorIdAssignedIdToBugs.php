@@ -2,7 +2,7 @@
 
 use Migrations\AbstractMigration;
 
-class Link extends AbstractMigration
+class AddAuthorIdAssignedIdToBugs extends AbstractMigration
 {
     /**
      * Change Method.

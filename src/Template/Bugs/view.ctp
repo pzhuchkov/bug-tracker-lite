@@ -55,12 +55,12 @@
             <td><?= $this->BugsData->getStatusById($bug->status) ?></td>
         </tr>
         <tr>
-            <th scope="row"><?= __('CreateAt') ?></th>
-            <td><?= h(date_format($bug->createAt, 'Y-m-d H:i:s')) ?></td>
+            <th scope="row"><?= __('Created') ?></th>
+            <td><?= h(date_format($bug->created, 'Y-m-d H:i:s')) ?></td>
         </tr>
         <tr>
-            <th scope="row"><?= __('UpdateAt') ?></th>
-            <td><?= h(date_format($bug->updateAt, 'Y-m-d H:i:s')) ?></td>
+            <th scope="row"><?= __('Modified') ?></th>
+            <td><?= h(date_format($bug->modified, 'Y-m-d H:i:s')) ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Description') ?></th>

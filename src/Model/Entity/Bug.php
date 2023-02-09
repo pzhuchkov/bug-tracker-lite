@@ -15,8 +15,8 @@ use Cake\ORM\Entity;
  * @property string|null                $author
  * @property string|null                $assigned
  * @property int|null                   $status
- * @property \Cake\I18n\FrozenTime      $createAt
- * @property \Cake\I18n\FrozenTime|null $updateAt
+ * @property \Cake\I18n\FrozenTime      $created
+ * @property \Cake\I18n\FrozenTime|null $modified
  * @property int|null                   $author_id
  * @property int|null                   $assigned_id
  */
@@ -39,8 +39,8 @@ class Bug extends Entity
         'author'      => true,
         'assigned'    => true,
         'status'      => true,
-        'createAt'    => true,
-        'updateAt'    => true,
+        'created'     => true,
+        'modified'    => true,
         'author_id'   => true,
         'assigned_id' => true,
     ];

@@ -37,14 +37,14 @@ class BugsController extends AppController
         if ($this->request->getQuery('from-date')) {
             $query = $query->where(
                 [
-                    'createAt >' => $this->request->getQuery('from-date'),
+                    'created >' => $this->request->getQuery('from-date'),
                 ]
             );
         }
         if ($this->request->getQuery('to-date')) {
             $query = $query->where(
                 [
-                    'createAt <' => $this->request->getQuery('to-date'),
+                    'created <' => $this->request->getQuery('to-date'),
                 ]
             );
         }
@@ -98,8 +98,6 @@ class BugsController extends AppController
 
             $bug->author = $user->email;
             $bug->author_id = $user->id;
-
-            $bug->createAt = FrozenTime::create();
 
             if ($bug->has('assigned_id')) {
                 $bug->assigned = $this->Bugs->Users->get($bug->assigned_id)->email;
@@ -155,8 +153,6 @@ class BugsController extends AppController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $bug = $this->Bugs->patchEntity($bug, $this->request->getData());
-
-            $bug->updateAt = FrozenTime::create();
 
             if ($bug->has('assigned_id')) {
                 $bug->assigned = $this->Bugs->Users->get($bug->assigned_id)->email;
