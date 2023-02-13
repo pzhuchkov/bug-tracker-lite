@@ -3,6 +3,7 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Model\Entity\Bug;
+use Cake\Datasource\EntityInterface;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
@@ -27,6 +28,8 @@ class BugsControllerTest extends TestCase
         'status'      => 2,
         'description' => 'UnitTest Description',
         'comment'     => 'UnitTest Comment',
+        'author'      => 'unit-test-author@example.com',
+        'assigned'    => 'unit-test-author@example.com',
     ];
 
     /**
@@ -173,6 +176,8 @@ class BugsControllerTest extends TestCase
         $query = $bugs->find()->where(['title' => $this->_testBugData['title']]);
         $this->assertEquals(1, $query->count());
 
+        $this->_checkBugData($query->first());
+
         $this->get('/bugs');
         $this->assertResponseOk();
         $this->assertResponseContains($this->_testBugData['title']);
@@ -223,6 +228,8 @@ class BugsControllerTest extends TestCase
         $query = $bugs->find()->where(['title' => $this->_testBugData['title']]);
         $this->assertEquals(1, $query->count());
 
+        $this->_checkBugData($query->first());
+
         $this->get('/bugs');
         $this->assertResponseOk();
         $this->assertResponseContains($this->_testBugData['title']);
@@ -252,11 +259,14 @@ class BugsControllerTest extends TestCase
         $this->_mockCsrf();
         $newTestBugData = $this->_testBugData;
         $newTestBugData['assigned_id'] = 2;
+        $newTestBugData['assigned'] = $mockUser['email'];
         $this->post('/bugs/edit/1', $newTestBugData);
         $this->assertRedirect('/bugs');
         $bugs = TableRegistry::getTableLocator()->get('Bugs');
         $query = $bugs->find()->where(['title' => $this->_testBugData['title']]);
         $this->assertEquals(1, $query->count());
+
+        $this->_checkBugData($query->first(), $newTestBugData);
 
         $this->_login(2);
         $this->get('/bugs/edit/1');
@@ -372,6 +382,8 @@ class BugsControllerTest extends TestCase
         $this->get('/bugs?from-date=' . $bug->created->format('Y.m.d H:i:s'));
         $this->assertResponseOk();
         $this->assertResponseContains($this->_testBugData['title']);
+        $this->assertResponseContains(Bug::getTypeList()[$this->_testBugData['type']]);
+        $this->assertResponseContains(Bug::getStatusList()[$this->_testBugData['status']]);
 
         /** @var Bug $bug */
         $bug = $bugs->get(1);
@@ -385,7 +397,29 @@ class BugsControllerTest extends TestCase
         );
         $this->assertResponseOk();
         $this->assertResponseContains('Lorem ipsum dolor sit amet');
+    }
 
+    /**
+     * Проверка полей бага
+     *
+     * @param Bug|EntityInterface $bug  проверяемый баг
+     * @param array|null          $data данные для проверки
+     *
+     * @return void
+     */
+    protected function _checkBugData(Bug $bug, array $data = null): void
+    {
+        if (is_null($data) === true) {
+            $data = $this->_testBugData;
+        }
 
+        $this->assertEquals($bug->type, $data['type']);
+        $this->assertEquals($bug->status, $data['status']);
+        $this->assertEquals($bug->description, $data['description']);
+        $this->assertEquals($bug->comment, $data['comment']);
+        $this->assertEquals($bug->assigned_id, $data['assigned_id']);
+        $this->assertEquals($bug->assigned, $data['assigned']);
+        $this->assertNotEmpty($bug->created);
+        $this->assertNotEmpty($bug->modified);
     }
 }

@@ -6,7 +6,9 @@ namespace App\Controller;
 use App\Model\Entity\Bug;
 use App\Model\Table\BugsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\Event;
 use Cake\Http\Response;
+use Cake\Routing\Router;
 
 /**
  * Bugs Controller
@@ -17,6 +19,48 @@ use Cake\Http\Response;
  */
 class BugsController extends AppController
 {
+    /**
+     * @var bool[] Список полей доступных для редактирования
+     */
+    protected $allowedFields = [
+        'title'       => true,
+        'description' => true,
+        'comment'     => true,
+        'type'        => true,
+        'status'      => true,
+        'assigned_id' => true,
+    ];
+
+    /**
+     * @param Event $event
+     *
+     * @return void
+     */
+    public function beforeFilter(Event $event): void
+    {
+        $checkRoutes = [
+            'edit',
+            'add',
+        ];
+        if (in_array($this->request->getParam('action'), $checkRoutes) !== true) {
+            return;
+        }
+
+        if (count($this->request->getData()) === 0) {
+            return;
+        }
+
+        $data = $this->request->getData();
+
+        foreach ($data as $name => $value) {
+            if (array_key_exists($name, $this->allowedFields) !== true) {
+                unset($data[$name]);
+            }
+        }
+
+        $this->request = $this->request->withParsedBody($data);
+    }
+
     /**
      * Index method
      *
