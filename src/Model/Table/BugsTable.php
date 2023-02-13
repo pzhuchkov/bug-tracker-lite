@@ -39,13 +39,18 @@ class BugsTable extends Table
 
         $this->setTable('bugs');
         $this->setDisplayField('title');
-        $this->setPrimaryKey('id');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'author_id',
+        $this->belongsTo('AuthorUser', [
+            'className'    => 'Users',
+            'propertyName' => 'AuthorUser',
+            'foreignKey'   => 'author_id',
+            //            'joinType' => 'INNER',
         ]);
-        $this->belongsTo('Users', [
-            'foreignKey' => 'assigned_id',
+        $this->belongsTo('AssignedUser', [
+            'className'    => 'Users',
+            'propertyName' => 'AssignedUser',
+            'foreignKey'   => 'assigned_id',
+            //            'joinType' => 'INNER',
         ]);
     }
 
@@ -111,8 +116,8 @@ class BugsTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->isUnique(['id']));
-        $rules->add($rules->existsIn(['author_id'], 'Users'));
-        $rules->add($rules->existsIn(['assigned_id'], 'Users'));
+        $rules->add($rules->existsIn(['author_id'], 'AuthorUser'));
+        $rules->add($rules->existsIn(['assigned_id'], 'AssignedUser'));
 
         return $rules;
     }

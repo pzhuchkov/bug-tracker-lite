@@ -14,12 +14,15 @@
 
 namespace App\View;
 
+use App\View\Helper\SortQueryHelper;
 use Cake\View\View;
 
 /**
  * Application View
  *
  * Your application's default view class
+ *
+ * @property SortQueryHelper $SortQuery
  *
  * @link https://book.cakephp.org/3/en/views.html#the-app-view
  */
@@ -38,6 +41,7 @@ class AppView extends View
     public function initialize(): void
     {
         $this->loadHelper('BugsData');
+        $this->loadHelper('SortQuery');
         $this->loadHelper('Paginator', ['templates' => 'paginator-templates']);
     }
 }

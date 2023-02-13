@@ -55,6 +55,11 @@
         if ($this->request->getQuery('sort')) {
             echo $this->Form->hidden('sort', ['val' => $this->request->getQuery('sort')]);
         }
+        if ($this->request->getQuery('order')) {
+            foreach ($this->request->getQuery('order') as $fieldName => $direction) {
+                echo $this->Form->hidden('order[' . $fieldName . ']', ['val' => $direction]);
+            }
+        }
         if ($this->request->getQuery('direction')) {
             echo $this->Form->hidden('direction', ['val' => $this->request->getQuery('direction')]);
         }
@@ -90,14 +95,14 @@
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-            <th scope="col"><?= $this->Paginator->sort('title') ?></th>
-            <th scope="col"><?= $this->Paginator->sort('type') ?></th>
-            <th scope="col"><?= $this->Paginator->sort('status') ?></th>
-            <th scope="col"><?= $this->Paginator->sort('author') ?></th>
-            <th scope="col"><?= $this->Paginator->sort('assigned') ?></th>
-            <th scope="col"><?= $this->Paginator->sort('created') ?></th>
-            <th scope="col"><?= $this->Paginator->sort('modified') ?></th>
+            <th scope="col">Id</th>
+            <th scope="col">Title</th>
+            <th scope="col"><a href="<?= $this->SortQuery->buildUrl('type') ?>">Type</a></th>
+            <th scope="col">Status</th>
+            <th scope="col">Author</th>
+            <th scope="col">Assigned</th>
+            <th scope="col"><a href="<?= $this->SortQuery->buildUrl('created') ?>">Created</a></th>
+            <th scope="col">Modified</th>
             <th scope="col" class="actions"><?= __('Actions') ?></th>
         </tr>
         </thead>
@@ -108,8 +113,8 @@
                 <td><?= $this->Html->link($bug->title, ['action' => 'view', $bug->id]) ?></td>
                 <td><?= \App\Model\Entity\Bug::getTypeList()[$bug->type] ?></td>
                 <td><?= \App\Model\Entity\Bug::getStatusList()[$bug->status] ?></td>
-                <td><?= h($bug->author) ?></td>
-                <td><?= h($bug->assigned) ?></td>
+                <td><?= h($bug->AuthorUser->email) ?></td>
+                <td><?= h($bug->AssignedUser->email) ?></td>
                 <td><?= h(date_format($bug->created, 'Y-m-d H:i:s')) ?></td>
                 <td><?= h($bug->modified ? date_format($bug->modified, 'Y-m-d H:i:s') : '') ?></td>
                 <td class="actions">

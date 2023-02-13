@@ -8,6 +8,7 @@ use App\Model\Table\BugsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Http\Response;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 
 /**
@@ -74,26 +75,39 @@ class BugsController extends AppController
         if ($this->request->getQuery('type')) {
             $query = $query->where(
                 [
-                    'type' => $this->request->getQuery('type'),
+                    'Bugs.type' => $this->request->getQuery('type'),
                 ]
             );
         }
         if ($this->request->getQuery('from-date')) {
             $query = $query->where(
                 [
-                    'created >=' => $this->request->getQuery('from-date'),
+                    'Bugs.created >=' => $this->request->getQuery('from-date'),
                 ]
             );
         }
         if ($this->request->getQuery('to-date')) {
             $query = $query->where(
                 [
-                    'created <=' => $this->request->getQuery('to-date'),
+                    'Bugs.created <=' => $this->request->getQuery('to-date'),
                 ]
             );
         }
 
-        $bugs = $this->paginate($query);
+        $query->contain('AuthorUser')->contain('AssignedUser');
+
+        $order = $this->request->getQuery('order');
+
+        if (is_array($order)) {
+            krsort($order);
+        }
+
+        $bugs = $this->paginate(
+            $query,
+            [
+                'order' => $order,
+            ]
+        );
 
         $this->set('typeList', array_merge_recursive([0 => ''], Bug::getTypeList()));
         $this->set(compact('bugs'));
@@ -140,11 +154,11 @@ class BugsController extends AppController
 
             $user = $this->Authentication->getIdentity();
 
-            $bug->author = $user->email;
-            $bug->author_id = $user->id;
+            $authorizedUser = TableRegistry::getTableLocator()->get('Users')->get($user->id);
+            $bug->AuthorUser = $authorizedUser;
 
             if ($bug->has('assigned_id')) {
-                $bug->assigned = $this->Bugs->Users->get($bug->assigned_id)->email;
+                $bug->AssignedUser = $this->Bugs->AssignedUser->get($bug->assigned_id);
             }
 
             if ($this->Bugs->save($bug)) {
@@ -167,7 +181,7 @@ class BugsController extends AppController
 
         }
 
-        $this->set('users', $this->Bugs->Users->find('list')->toArray());
+        $this->set('users', TableRegistry::getTableLocator()->get('Users')->query()->find('list'));
         $this->set('typeList', Bug::getTypeList());
         $this->set('statusList', Bug::getStatusList());
 
@@ -199,7 +213,7 @@ class BugsController extends AppController
             $bug = $this->Bugs->patchEntity($bug, $this->request->getData());
 
             if ($bug->has('assigned_id')) {
-                $bug->assigned = $this->Bugs->Users->get($bug->assigned_id)->email;
+                $bug->AssignedUser = $this->Bugs->AssignedUser->get($bug->assigned_id);
             }
 
             if ($this->Bugs->save($bug)) {
@@ -210,9 +224,7 @@ class BugsController extends AppController
             $this->Flash->error(__('The bug could not be saved. Please, try again.'));
         }
 
-        $users = $this->Bugs->Users->find('list')->toArray();
-
-        $this->set('users', $users);
+        $this->set('users', TableRegistry::getTableLocator()->get('Users')->query()->find('list'));
         $this->set('typeList', Bug::getTypeList());
         $this->set('statusList', Bug::getStatusList());
 

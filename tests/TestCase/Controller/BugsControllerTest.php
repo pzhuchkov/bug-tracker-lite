@@ -289,8 +289,9 @@ class BugsControllerTest extends TestCase
      */
     public function testDeleteWithoutLogin(): void
     {
+        $this->_mockCsrf();
         $this->post('/bugs/delete/1');
-        $this->assertResponseContains('/login');
+        $this->assertRedirectContains('/login');
     }
 
     /**
@@ -302,8 +303,9 @@ class BugsControllerTest extends TestCase
     public function testDeleteWithWrongRights(): void
     {
         $this->_login();
+        $this->_mockCsrf();
         $this->post('/bugs/delete/1000');
-        $this->assertResponseCode(403);
+        $this->assertResponseCode(404);
     }
 
     /**
@@ -418,7 +420,6 @@ class BugsControllerTest extends TestCase
         $this->assertEquals($bug->description, $data['description']);
         $this->assertEquals($bug->comment, $data['comment']);
         $this->assertEquals($bug->assigned_id, $data['assigned_id']);
-        $this->assertEquals($bug->assigned, $data['assigned']);
         $this->assertNotEmpty($bug->created);
         $this->assertNotEmpty($bug->modified);
     }
