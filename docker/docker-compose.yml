@@ -18,11 +18,10 @@ services:
       args:
         USER_UID: ${USER_UID}
     volumes:
-      - "${ROOT_DIRECTORY}:/var/www/cake"
+      - "../:/var/www/cake"
       - "cake_var_volume:/var/www/cake/var"
       - "~/.composer:/root/.composer"
     environment:
-      XDEBUG_CONFIG: "remote_host=${YOUR_IP_ADDRESS}, client_host=${YOUR_IP_ADDRESS}"
       PHP_IDE_CONFIG: "serverName=${YOUR_HOST}"
   nginx_cake:
     build: nginx
