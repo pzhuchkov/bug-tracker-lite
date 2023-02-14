@@ -1,17 +1,13 @@
 PHP=php
-CONSOLE=bin/console
-BOWER=bower
 COMPOSER=composer
 WWW_USER=www-data
 WWW_GROUP=www-data
 DOCKER_DIRECTORY=docker
 DOCKER_COMPOSE=docker-compose
-DOCKER_SYNC=docker-sync-stack
 PHP_UNIT=vendor/bin/phpunit
 PHP_CAKE=bin/cake
 PHP_CONTAINER=php_cake
 GIT=git
-VERSION=$(shell date '+1.0.0.%Y%m%d-%H%M%S')
 
 release:
 	$(GIT) tag -a '$(VERSION)' -m '$(VERSION)'
