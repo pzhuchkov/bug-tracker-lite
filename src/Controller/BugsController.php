@@ -23,7 +23,7 @@ class BugsController extends AppController
     /**
      * @var bool[] Список полей доступных для редактирования
      */
-    protected $allowedFields = [
+    protected $_allowedFields = [
         'title'       => true,
         'description' => true,
         'comment'     => true,
@@ -54,7 +54,7 @@ class BugsController extends AppController
         $data = $this->request->getData();
 
         foreach ($data as $name => $value) {
-            if (array_key_exists($name, $this->allowedFields) !== true) {
+            if (array_key_exists($name, $this->_allowedFields) !== true) {
                 unset($data[$name]);
             }
         }
