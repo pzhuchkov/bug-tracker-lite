@@ -62,7 +62,7 @@ class UsersControllerTest extends TestCase
         $this->assertResponseContains('Bugs');
         $this->assertResponseContains('Users');
         $this->assertResponseContains('Email');
-        $this->assertResponseContains('Lorem');
+        $this->assertResponseContains('unit-test-author@example.com');
     }
 
     /**

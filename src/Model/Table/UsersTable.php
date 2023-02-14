@@ -37,9 +37,23 @@ class UsersTable extends Table
 
         $this->setTable('users');
         $this->setDisplayField('email');
-        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->hasMany(
+            'AssignedBugs',
+            [
+                'foreignKey' => 'assigned_id',
+                'class'      => 'Bugs',
+            ]
+        );
+        $this->hasMany(
+            'AuthorBugs',
+            [
+                'foreignKey' => 'author_id',
+                'class'      => 'Bugs',
+            ]
+        );
     }
 
     /**
